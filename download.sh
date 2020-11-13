@@ -37,7 +37,6 @@ download_sdk() {
         # Download/Update OpenWrt SDK
         if [ ! -d "$sdk_dir/$version/$target" ]; then
             git clone $gl_inet_imagebuilder_url/openwrt-sdk-$sdk_name.git $sdk_dir/$version/$target
-            git clone https://github.com/willdeark/hipackage.git $sdk_dir/$version/$target/package/hipackage
             [ "$target" != "ipq806x" ] && {
                pushd $sdk_dir/$version/$target > /dev/null
                ./scripts/feeds update -f
@@ -50,6 +49,9 @@ download_sdk() {
             pushd $sdk_dir/$version/$target > /dev/null
             git pull
             popd > /dev/null
+        fi
+        if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
+            git clone https://github.com/willdeark/hipackage.git $sdk_dir/$version/$target/package/hipackage
         fi
         exit 0
     done
