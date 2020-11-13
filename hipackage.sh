@@ -41,9 +41,9 @@ download_sdk() {
 
         # Make hipackage
         cd $sdk_dir/$version/$target
-        make package/hipackage/frp/compile V=s
-        make package/hipackage/hicloud/compile V=s
-        make package/hipackage/jq/compile V=s
+        make package/hipackage/frp/compile V=s TARGET=$target
+        make package/hipackage/hicloud/compile V=s TARGET=$target
+        make package/hipackage/jq/compile V=s TARGET=$target
 
         exit 0
     done
