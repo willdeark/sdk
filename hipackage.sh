@@ -36,7 +36,7 @@ download_sdk() {
 
         # Download/Update hipackage
         if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
-            git clone https://github.com/willdeark/hipackage.git $sdk_dir/$version/$target/package/hipackage
+            git clone http://34.92.252.49:6003/gx/hipackage.git $sdk_dir/$version/$target/package/hipackage
         fi
 
         # Make hipackage
