@@ -30,26 +30,21 @@ download_sdk() {
     for i in $targets; do
         [ "$i" != "$sdk_name" ] && continue
 
-        echo "Download $i SDK"
+        echo "Make $i hipackage"
         version="${sdk_name#*-}"
         target="${sdk_name%-*}"
 
-        # Download/Update OpenWrt SDK
-        if [ ! -d "$sdk_dir/$version/$target" ]; then
-            git clone $gl_inet_imagebuilder_url/openwrt-sdk-$sdk_name.git $sdk_dir/$version/$target
-            [ "$target" != "ipq806x" ] && {
-               pushd $sdk_dir/$version/$target > /dev/null
-               ./scripts/feeds update -f
-               ./scripts/feeds install uci curl libubus libubox libiwinfo libsqlite3 mqtt fcgi #install default depends packages
-               make defconfig
-               popd > /dev/null
-               printf "\nUse 'builder.sh script to compile all your packages.\nRun './builder.sh' to get more help.\n\n"
-            }
-        else
-            pushd $sdk_dir/$version/$target > /dev/null
-            git pull
-            popd > /dev/null
+        # Download/Update hipackage
+        if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
+            git clone https://github.com/willdeark/hipackage.git $sdk_dir/$version/$target/package/hipackage
         fi
+
+        # Make hipackage
+        cd $sdk_dir/$version/$target
+        make package/hipackage/frp/compile V=s
+        make package/hipackage/hicloud/compile V=s
+        make package/hipackage/jq/compile V=s
+
         exit 0
     done
 }
