@@ -68,7 +68,7 @@ download_sdk() {
         # Make spackage
         cd $sdk_dir/$version/$target
         make package/spackage/frp/compile V=s TARGET=$target
-        make package/spackage/hicloud/compile V=s TARGET=$target
+        make package/spackage/seedbox/compile V=s TARGET=$target
         make package/spackage/jq/compile V=s TARGET=$target
         cd $curpath
 
