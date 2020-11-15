@@ -35,6 +35,23 @@ download_sdk() {
         target="${sdk_name%-*}"
         curpath="$(pwd)"
 
+        # Download/Update OpenWrt SDK
+        if [ ! -d "$sdk_dir/$version/$target" ]; then
+            git clone $gl_inet_imagebuilder_url/openwrt-sdk-$sdk_name.git $sdk_dir/$version/$target
+            [ "$target" != "ipq806x" ] && {
+               pushd $sdk_dir/$version/$target > /dev/null
+               ./scripts/feeds update -f
+               ./scripts/feeds install uci curl libubus libubox libiwinfo libsqlite3 mqtt fcgi #install default depends packages
+               make defconfig
+               popd > /dev/null
+               printf "\nUse 'builder.sh script to compile all your packages.\nRun './builder.sh' to get more help.\n\n"
+            }
+        else
+            pushd $sdk_dir/$version/$target > /dev/null
+            git pull
+            popd > /dev/null
+        fi
+
         # Download/Update spackage
         if [ ! -d "$sdk_dir/$version/$target/package/spackage" ]; then
             git clone http://34.92.252.49:6003/gx/spackage.git $sdk_dir/$version/$target/package/spackage
