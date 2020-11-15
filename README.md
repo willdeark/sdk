@@ -166,3 +166,11 @@ $ opkg install <package_name>.ipk
 ```
 
  Will install the package on the device without internet. 
+
+
+# spackage
+
+```
+chmod +x ./spackage.sh
+./spackage.sh [target]
+```
