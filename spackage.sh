@@ -30,29 +30,29 @@ download_sdk() {
     for i in $targets; do
         [ "$i" != "$sdk_name" ] && continue
 
-        echo "Make $i hipackage"
+        echo "Make $i spackage"
         version="${sdk_name#*-}"
         target="${sdk_name%-*}"
         curpath="$(pwd)"
 
-        # Download/Update hipackage
-        if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
-            git clone http://34.92.252.49:6003/gx/hipackage.git $sdk_dir/$version/$target/package/hipackage
+        # Download/Update spackage
+        if [ ! -d "$sdk_dir/$version/$target/package/spackage" ]; then
+            git clone http://34.92.252.49:6003/gx/spackage.git $sdk_dir/$version/$target/package/spackage
         else
-            cd $sdk_dir/$version/$target/package/hipackage
+            cd $sdk_dir/$version/$target/package/spackage
             git fetch --all && git reset --hard origin/master
             cd $curpath
         fi
-        if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
-            echo "Clone hipackage fail"
+        if [ ! -d "$sdk_dir/$version/$target/package/spackage" ]; then
+            echo "Clone spackage fail"
             exit 0
         fi
 
-        # Make hipackage
+        # Make spackage
         cd $sdk_dir/$version/$target
-        make package/hipackage/frp/compile V=s TARGET=$target
-        make package/hipackage/hicloud/compile V=s TARGET=$target
-        make package/hipackage/jq/compile V=s TARGET=$target
+        make package/spackage/frp/compile V=s TARGET=$target
+        make package/spackage/hicloud/compile V=s TARGET=$target
+        make package/spackage/jq/compile V=s TARGET=$target
         cd $curpath
 
         exit 0
