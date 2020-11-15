@@ -33,10 +33,19 @@ download_sdk() {
         echo "Make $i hipackage"
         version="${sdk_name#*-}"
         target="${sdk_name%-*}"
+        curpath="$(pwd)"
 
         # Download/Update hipackage
         if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
             git clone http://34.92.252.49:6003/gx/hipackage.git $sdk_dir/$version/$target/package/hipackage
+        else
+            cd $sdk_dir/$version/$target/package/hipackage
+            git fetch --all && git reset --hard origin/master
+            cd $curpath
+        fi
+        if [ ! -d "$sdk_dir/$version/$target/package/hipackage" ]; then
+            echo "Clone hipackage fail"
+            exit 0
         fi
 
         # Make hipackage
@@ -44,6 +53,7 @@ download_sdk() {
         make package/hipackage/frp/compile V=s TARGET=$target
         make package/hipackage/hicloud/compile V=s TARGET=$target
         make package/hipackage/jq/compile V=s TARGET=$target
+        cd $curpath
 
         exit 0
     done
