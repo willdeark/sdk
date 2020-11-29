@@ -65,6 +65,11 @@ download_sdk() {
             exit 0
         fi
 
+        # Delete old
+        rm -rf $sdk_dir/$version/$target/bin/packages/*/base/frp* && rm -rf ../imagebuilder/glinet/$target/frp*
+        rm -rf $sdk_dir/$version/$target/bin/packages/*/base/jq* && rm -rf ../imagebuilder/glinet/$target/jq*
+        rm -rf $sdk_dir/$version/$target/bin/packages/*/base/speedbox* && rm -rf ../imagebuilder/glinet/$target/speedbox*
+
         # Make spackage
         cd $sdk_dir/$version/$target
         make package/spackage/frp/compile V=s TARGET=$target
@@ -72,23 +77,10 @@ download_sdk() {
         make package/spackage/jq/compile V=s TARGET=$target
         cd $curpath
 
-        if [ "$sdk_name" == "ar71xx-1806" ]; then
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/mips_24kc/base/frp* ../imagebuilder/glinet/ar71xx
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/mips_24kc/base/jq* ../imagebuilder/glinet/ar71xx
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/mips_24kc/base/speedbox* ../imagebuilder/glinet/ar71xx
-        elif [ "$sdk_name" == "ramips-1806" ]; then
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/mipsel_24kc/base/frp* ../imagebuilder/glinet/ramips
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/mipsel_24kc/base/jq* ../imagebuilder/glinet/ramips
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/mipsel_24kc/base/speedbox* ../imagebuilder/glinet/ramips
-        elif [ "$sdk_name" == "ipq806x-qsdk53" ]; then
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/ipq806x/base/frp* ../imagebuilder/glinet/ipq806x
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/ipq806x/base/jq* ../imagebuilder/glinet/ipq806x
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/ipq806x/base/speedbox* ../imagebuilder/glinet/ipq806x
-        elif [ "$sdk_name" == "mvebu-1907" ]; then
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/aarch64_cortex-a53/base/frp* ../imagebuilder/glinet/mvebu
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/aarch64_cortex-a53/base/jq* ../imagebuilder/glinet/mvebu
-            /bin/cp -rf $sdk_dir/$version/$target/bin/packages/aarch64_cortex-a53/base/speedbox* ../imagebuilder/glinet/mvebu
-        fi
+        # Copy to imagebuilder
+        /bin/cp -rf $sdk_dir/$version/$target/bin/packages/*/base/frp* ../imagebuilder/glinet/$target
+        /bin/cp -rf $sdk_dir/$version/$target/bin/packages/*/base/jq* ../imagebuilder/glinet/$target
+        /bin/cp -rf $sdk_dir/$version/$target/bin/packages/*/base/speedbox* ../imagebuilder/glinet/$target
 
         exit 0
     done
