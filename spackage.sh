@@ -52,6 +52,13 @@ download_sdk() {
             popd > /dev/null
         fi
 
+        # Download jq-1.5.tar.gz
+        if [ "$target" == "ipq806x" ]; then
+            if [ ! -f "$sdk_dir/$version/$target/dl/jq-1.5.tar.gz" ]; then
+                wget -P "$sdk_dir/$version/$target/dl/" https://github.com/stedolan/jq/releases/download/jq-1.5/jq-1.5.tar.gz
+            fi
+        fi
+
         # Download/Update spackage
         if [ ! -d "$sdk_dir/$version/$target/package/spackage" ]; then
             git clone ssh://git@34.92.252.49:6005/gx/spackage.git $sdk_dir/$version/$target/package/spackage
