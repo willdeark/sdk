@@ -107,7 +107,8 @@ compile_image() {
     ./gl_image -p mv1000-emmc
     ./gl_image -p mifi
     cd $curpath
-    mkdir ./bin
+    mkdir -p ./bin
+    rm -rf ./bin/$serverip
     /bin/cp -rf ../imagebuilder/bin ./bin/$serverip
 }
 
