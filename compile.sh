@@ -6,8 +6,10 @@ sdk_dir="sdk"
 targets="ar71xx-1806 ramips-1806 ipq806x-qsdk53 mvebu-1907"
 
 curpath="$(pwd)"
-serverip=""
-serverdomain=""
+
+server_addr=""
+server_domain=""
+device_url=""
 
 gl_inet_imagebuilder_url="https://github.com/gl-inet-builder"
 
@@ -28,22 +30,27 @@ compile_start() {
         exit 0
     fi
 
-    serverip_=`grep -E -o "FRPC_SERVER_ADDR\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
-    serverdomain_=`grep -E -o "FRPC_SERVER_DOMAIN\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
+    server_addr_=`grep -E -o "FRPC_SERVER_ADDR\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
+    server_domain_=`grep -E -o "FRPC_SERVER_DOMAIN\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
+    device_url_=`grep -E -o "PUBLISH_DEVICE_URL\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
 
-    read -rp "调度中心地址（默认:${serverip_}）：" serverip
-    [[ -z ${serverip} ]] && serverip="$serverip_"
-    read -rp "穿透绑定域名（默认:${serverdomain_}）：" serverdomain
-    [[ -z ${serverdomain} ]] && serverdomain="$serverdomain_"
+    read -rp "穿透服务端地址 (默认: ${server_addr_}): " server_addr
+    [[ -z ${server_addr} ]] && server_addr="$server_addr_"
 
-    if [[ "$serverdomain" != *"*"* ]]; then
+    read -rp "穿透绑定域名 (默认: ${server_domain_}): " server_domain
+    [[ -z ${server_domain} ]] && server_domain="$server_domain_"
+
+    read -rp "调度中心地址 (默认: ${device_url_}): " device_url
+    [[ -z ${device_url} ]] && device_url="$device_url_"
+
+    if [[ "$server_domain" != *"*"* ]]; then
         echo "穿透绑定域名格式错误"
         exit 0
     fi
 
-    sed -i "/PUBLISH_DEVICE_URL=/c PUBLISH_DEVICE_URL=\"http:\/\/${serverip}:6006\" #调度中心域名（建议使用IP地址）" ${utilpath}
-    sed -i "/FRPC_SERVER_ADDR=/c FRPC_SERVER_ADDR=\"${serverip}\" #穿透服务端IP" ${utilpath}
-    sed -i "/FRPC_SERVER_DOMAIN=/c FRPC_SERVER_DOMAIN=\"${serverdomain}\" #穿透绑定域名后缀" ${utilpath}
+    sed -i "/FRPC_SERVER_ADDR=/c FRPC_SERVER_ADDR=\"${server_addr}\" #穿透服务端地址" ${utilpath}
+    sed -i "/FRPC_SERVER_DOMAIN=/c FRPC_SERVER_DOMAIN=\"${server_domain}\" #穿透绑定域名后缀" ${utilpath}
+    sed -i "/PUBLISH_DEVICE_URL=/c PUBLISH_DEVICE_URL=\"${device_url}\" #调度中心地址" ${utilpath}
 
     for sdk_name in $targets; do
         echo "Make $sdk_name spackage"
@@ -108,8 +115,8 @@ compile_image() {
     ./gl_image -p mifi
     cd $curpath
     mkdir -p ./bin
-    rm -rf ./bin/$serverip
-    /bin/cp -rf ../imagebuilder/bin ./bin/$serverip
+    rm -rf ./bin/$server_addr
+    /bin/cp -rf ../imagebuilder/bin ./bin/$server_addr
 }
 
 compile_start
