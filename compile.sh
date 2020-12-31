@@ -31,11 +31,14 @@ compile_start() {
     fi
 
     server_addr_=`grep -E -o "FRPC_SERVER_ADDR\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
-    server_domain_=`grep -E -o "FRPC_SERVER_DOMAIN\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
-    device_url_=`grep -E -o "PUBLISH_DEVICE_URL\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
+    # server_domain_=`grep -E -o "FRPC_SERVER_DOMAIN\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
+    # device_url_=`grep -E -o "PUBLISH_DEVICE_URL\=\"(.*?)\"" ${utilpath} | head -1 | awk -F "=\"" '{print $2}'  | awk -F "\"" '{print $1}'`
 
     read -rp "穿透服务端地址 (默认: ${server_addr_}): " server_addr
     [[ -z ${server_addr} ]] && server_addr="$server_addr_"
+
+    server_domain_="*.$server_addr"
+    device_url_="http://$server_addr"
 
     read -rp "穿透绑定域名 (默认: ${server_domain_}): " server_domain
     [[ -z ${server_domain} ]] && server_domain="$server_domain_"
