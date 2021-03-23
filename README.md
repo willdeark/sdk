@@ -166,23 +166,3 @@ $ opkg install <package_name>.ipk
 ```
 
  Will install the package on the device without internet.
-
-
-# spackage
-
-```shell
-# 编译指定架构的ipk包，编译完成的ipk包存放在../imagebuilder/glinet/$target
-
-chmod +x ./spackage.sh
-./spackage.sh [target]
-```
-
-
-# compile
-
-```shell
-# 一键编译所有机型，编译完成的bin存放在./bin/{ip}
-
-chmod +x ./compile.sh
-./compile.sh
-```
